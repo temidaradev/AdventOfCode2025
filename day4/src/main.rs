@@ -2,7 +2,17 @@ use std::collections::HashSet;
 use std::fs;
 
 use glam::*;
-use nom::*;
+
+const NEIGHBORS: [IVec2; 8] = [
+    IVec2::X,
+    IVec2::Y,
+    IVec2::NEG_X,
+    IVec2::NEG_Y,
+    IVec2::ONE,
+    IVec2::NEG_ONE,
+    IVec2::new(1, -1),
+    IVec2::new(-1, 1),
+];
 
 fn part1(input: &str) -> String {
     let positions = input
@@ -15,9 +25,19 @@ fn part1(input: &str) -> String {
         })
         .collect::<HashSet<IVec2>>();
 
-    println!("{:?}", positions);
+    let count = positions
+        .iter()
+        .filter(|&position| {
+            NEIGHBORS
+                .iter()
+                .filter(|&offset| positions.contains(&(position + offset)))
+                .count()
+                < 4
+        })
+        .count();
 
-    todo!()
+    println!("{:?}", count);
+    count.to_string()
 }
 
 fn main() {
