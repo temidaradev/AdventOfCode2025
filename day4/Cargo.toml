@@ -6,3 +6,9 @@ edition = "2024"
 [dependencies]
 nom.workspace = true
 glam.workspace = true 
+divan.workspace = true
+
+[[bench]]
+name = "day4_bench"
+path = "benches/benchmarks.rs"
+harness = false

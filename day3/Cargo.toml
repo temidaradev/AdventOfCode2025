@@ -5,3 +5,9 @@ edition = "2024"
 
 [dependencies]
 itertools.workspace = true
+divan.workspace = true
+
+[[bench]]
+name = "day3_bench"
+path = "benches/benchmarks.rs"
+harness = false
