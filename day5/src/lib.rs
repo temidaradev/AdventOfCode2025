@@ -1,0 +1,58 @@
+use nom::{
+    bytes::complete::tag,
+    character::complete::{self, line_ending},
+    combinator::{all_consuming, opt},
+    multi::separated_list1,
+    sequence::{separated_pair, terminated},
+    IResult, Parser,
+};
+use rangemap::RangeInclusiveSet;
+use std::ops::RangeInclusive;
+
+pub fn part1(input: &str) -> String {
+    let (_, (ranges, items)) = all_consuming(parse).parse(input).unwrap();
+
+    let result = items
+        .iter()
+        .filter(|item| ranges.iter().any(|range| range.contains(item)))
+        .count();
+
+    result.to_string()
+}
+
+pub fn part2(input: &str) -> String {
+    let (_, ranges) = ranges.parse(input).unwrap();
+
+    let mut range_set = RangeInclusiveSet::new();
+    for range in ranges {
+        range_set.insert(range);
+    }
+    let result = range_set
+        .iter()
+        .map(|range| range.end() + 1 - range.start())
+        .sum::<u64>();
+
+    result.to_string()
+}
+
+fn parse(input: &str) -> IResult<&str, (Vec<RangeInclusive<u64>>, Vec<u64>)> {
+    terminated(
+        separated_pair(
+            ranges,
+            line_ending.and(line_ending),
+            separated_list1(line_ending, complete::u64),
+        ),
+        opt(line_ending),
+    )
+    .parse(input)
+}
+
+fn ranges(input: &str) -> IResult<&str, Vec<RangeInclusive<u64>>> {
+    separated_list1(line_ending, range).parse(input)
+}
+
+fn range(input: &str) -> IResult<&str, RangeInclusive<u64>> {
+    separated_pair(complete::u64, tag("-"), complete::u64)
+        .map(|(a, b)| a..=b)
+        .parse(input)
+}

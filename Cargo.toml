@@ -4,6 +4,7 @@ members = [
     "day2",
     "day3",
     "day4",
+    "day5",
 ]
 resolver = "3"
 
@@ -12,3 +13,6 @@ nom = "8.0.0"
 glam = "0.30.9"
 itertools = "0.14.0"
 divan = "0.1.7"
+tracing = "0.1.43"
+merged_range = "0.1.0"
+rangemap = "1.7.0"
