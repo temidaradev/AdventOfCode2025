@@ -4,3 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+nom.workspace = true
+itertools.workspace = true
+divan.workspace = true
+
+[[bench]]
+name = "day6_bench"
+path = "benches/benchmarks.rs"
+harness = false
