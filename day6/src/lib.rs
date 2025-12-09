@@ -28,9 +28,57 @@ pub fn part1(input: &str) -> String {
         .sum::<u64>();
     result.to_string()
 }
+
 pub fn part2(input: &str) -> String {
-    todo!()
+    let mut ops = vec![];
+    let mut lines_iterators = vec![];
+    for (pos, line) in input.lines().with_position() {
+        if let Position::Last = pos {
+            let (_input, mut output) = operations(line).unwrap();
+            output.reverse();
+            ops = output;
+        }
+        lines_iterators.push(line.chars().rev());
+    }
+    let result = ops
+        .iter()
+        .map(|op| {
+            let mut output = match *op {
+                "*" => 1,
+                "+" => 0,
+                _ => {
+                    panic!("");
+                }
+            };
+            loop {
+                let result: u64 = lines_iterators
+                    .iter_mut()
+                    .rev()
+                    .filter_map(|line| line.next().and_then(|c| c.to_digit(10)))
+                    .enumerate()
+                    .map(|(places, digit)| digit as u64 * 10u64.pow(places as u32))
+                    .sum();
+                if result == 0 {
+                    break;
+                }
+                match *op {
+                    "*" => {
+                        output *= result;
+                    }
+                    "+" => {
+                        output += result;
+                    }
+                    _ => {
+                        panic!("");
+                    }
+                }
+            }
+            output
+        })
+        .sum::<u64>();
+    result.to_string()
 }
+
 fn parse(input: &str) -> IResult<&str, (Vec<Vec<u64>>, Vec<&str>)> {
     separated_pair(
         separated_list1(
@@ -41,4 +89,8 @@ fn parse(input: &str) -> IResult<&str, (Vec<Vec<u64>>, Vec<&str>)> {
         separated_list1(space1, alt((tag("*"), tag("+")))),
     )
     .parse(input)
+}
+
+fn operations(input: &str) -> IResult<&str, Vec<&str>> {
+    separated_list1(space1, alt((tag("*"), tag("+")))).parse(input)
 }
