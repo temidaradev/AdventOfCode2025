@@ -1,4 +1,4 @@
-use rustc_hash::FxHashSet;
+use rustc_hash::{FxHashMap, FxHashSet};
 
 pub fn part1(input: &str) -> String {
     let mut line_iter = input.lines().enumerate();
@@ -36,6 +36,52 @@ pub fn part1(input: &str) -> String {
     set.len().to_string()
 }
 
+type Count = usize;
+type Position = usize;
+
 pub fn part2(input: &str) -> String {
-    todo!()
+    let mut line_iter = input.lines().enumerate();
+    let s_position = line_iter
+        .next()
+        .unwrap()
+        .1
+        .chars()
+        .position(|val| val == 'S')
+        .unwrap();
+    let map = line_iter.fold(
+        {
+            let mut m = FxHashMap::<Position, Count>::default();
+            m.insert(s_position, 1);
+            m
+        },
+        |positions, (index, line)| {
+            let mut new_positions = FxHashMap::<Position, Count>::default();
+            for (index, count) in positions {
+                if line.as_bytes()[index] == '^' as u8 {
+                    new_positions
+                        .entry(index - 1)
+                        .and_modify(|value| {
+                            *value += count;
+                        })
+                        .or_insert(count);
+                    new_positions
+                        .entry(index + 1)
+                        .and_modify(|value| {
+                            *value += count;
+                        })
+                        .or_insert(count);
+                } else {
+                    new_positions
+                        .entry(index)
+                        .and_modify(|value| {
+                            *value += count;
+                        })
+                        .or_insert(count);
+                }
+            }
+
+            new_positions
+        },
+    );
+    map.values().sum::<usize>().to_string()
 }
