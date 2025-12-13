@@ -1,0 +1,13 @@
+[package]
+name = "day8"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+divan.workspace = true
+
+
+[[bench]]
+name = "day8_bench"
+path = "benches/benchmarks.rs"
+harness = false
