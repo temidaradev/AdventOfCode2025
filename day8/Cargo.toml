@@ -5,7 +5,10 @@ edition = "2024"
 
 [dependencies]
 divan.workspace = true
-
+glam.workspace = true
+itertools.workspace = true
+nom.workspace = true
+tracing.workspace = true
 
 [[bench]]
 name = "day8_bench"
